@@ -20,7 +20,8 @@ export class ClienteListComponent implements OnInit {
 
   public readonly colunas: Array<ThfTableColumn> = [
     // Definição das colunas
-    
+    {property: 'name'},
+    {property: 'nickname'}
   ];
 
   constructor(private httpClient: HttpClient) { }
