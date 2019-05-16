@@ -11,6 +11,7 @@ export class AppComponent {
 
   readonly menus: Array<ThfMenuItem> = [
     { label: 'Home', link: '/home' },
+    { label: 'Clientes', link: '/clientes' },
   ];
 
 }
