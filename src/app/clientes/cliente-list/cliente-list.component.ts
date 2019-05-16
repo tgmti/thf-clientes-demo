@@ -15,9 +15,11 @@ export class ClienteListComponent implements OnInit {
   // Url do servidor de exemplo
   private readonly url: string = 'https://sample-customers-api.herokuapp.com/api/thf-samples/v1/people';
   private clienteSub = Subscription;
+  private page: number = 1;
 
   public clientes: Array<any> = [];
   public loading: boolean = true;
+  public hasNext: boolean = false;
 
   public readonly colunas: Array<ThfTableColumn> = [
     // Definição das colunas
@@ -40,22 +42,32 @@ export class ClienteListComponent implements OnInit {
   constructor(private httpClient: HttpClient) { }
 
   ngOnInit() {
-    this.clienteSub = this.httpClient.get(this.url)
-      .subscribe((response: {hasNext: boolean, items: Array<any>}) => {
-        this.clientes = response.items
-        this.loading = false;
-      });
+    this.loadData();
   }
-
+  
   ngOnDestroy() {
     this.clienteSub.unsubscribe();
   }
-
+  
   private sendMail(email, cliente) {
     const body = `Olá ${cliente.name}, gostaríamos de agradecer seu contato.`;
     const subject = `Contato - Cliente ${cliente.name}`;
 
     window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_self');
+  }
+  
+  public loadData() {
+    
+    const urlWithPagination = `${this.url}?page=${this.page}`;
+    
+    this.loading = true;
+
+    this.clienteSub = this.httpClient.get(urlWithPagination)
+      .subscribe((response: {hasNext: boolean, items: Array<any>}) => {
+        this.clientes = [...this.clientes, ...response.items];
+        this.hasNext = response.hasNext;
+        this.loading = false;
+      });
   }
 
 }
