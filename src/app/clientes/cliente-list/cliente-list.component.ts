@@ -17,6 +17,7 @@ export class ClienteListComponent implements OnInit {
   private clienteSub = Subscription;
 
   public clientes: Array<any> = [];
+  public loading: boolean = true;
 
   public readonly colunas: Array<ThfTableColumn> = [
     // Definição das colunas
@@ -42,6 +43,7 @@ export class ClienteListComponent implements OnInit {
     this.clienteSub = this.httpClient.get(this.url)
       .subscribe((response: {hasNext: boolean, items: Array<any>}) => {
         this.clientes = response.items
+        this.loading = false;
       });
   }
 

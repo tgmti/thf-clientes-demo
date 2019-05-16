@@ -2,8 +2,10 @@
   t-title="Listagem de Clientes">
   <!-- Tabela para exibição dos dados -->
   <thf-table
+    t-sort="true"
     [t-columns]="colunas"
-    [t-items]="clientes">
+    [t-items]="clientes"
+    [t-loading]="loading" >
   </thf-table>
 
 </thf-page-list>
