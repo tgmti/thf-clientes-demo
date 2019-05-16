@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
+import { ThfTableColumn } from '@totvs/thf-ui';
 
 @Component({
   selector: 'app-cliente-list',
@@ -16,6 +17,11 @@ export class ClienteListComponent implements OnInit {
   private clienteSub = Subscription;
 
   public clientes: Array<any> = [];
+
+  public readonly colunas: Array<ThfTableColumn> = [
+    // Definição das colunas
+    
+  ];
 
   constructor(private httpClient: HttpClient) { }
 
