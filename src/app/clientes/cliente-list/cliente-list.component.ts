@@ -28,7 +28,12 @@ export class ClienteListComponent implements OnInit {
       { value: 'Female', color: 'color-05', content: 'F', label: 'Feminino' },
       { value: 'Male', color: 'color-02', content: 'M', label: 'Masculino' },
       { value: 'Other', color: 'color-08', content: 'O', label: 'Outros' },
-    ]}    
+    ]},   
+    {property: 'city', label: 'Cidade' },
+    { property: 'status', type: 'label', labels: [
+      { value: 'Active', color: 'success', label: 'Ativo' },
+      { value: 'Inactive', color: 'danger', label: 'Inativo' }
+    ]},    
   ];
 
   constructor(private httpClient: HttpClient) { }
