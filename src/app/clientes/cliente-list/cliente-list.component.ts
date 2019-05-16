@@ -24,6 +24,11 @@ export class ClienteListComponent implements OnInit {
     {property: 'nickname', label: 'Usuário' },
     {property: 'email', label: 'E-mail', type: 'link', action: this.sendMail.bind(this)},
     {property: 'birthdate', label: 'Nascimento', type: 'date', format: 'dd/MM/yyyy' },
+    {property: 'genre', label: 'Gênero', type: 'subtitle', width: '80px', subtitles: [
+      { value: 'Female', color: 'color-05', content: 'F', label: 'Feminino' },
+      { value: 'Male', color: 'color-02', content: 'M', label: 'Masculino' },
+      { value: 'Other', color: 'color-08', content: 'O', label: 'Outros' },
+    ]}    
   ];
 
   constructor(private httpClient: HttpClient) { }
