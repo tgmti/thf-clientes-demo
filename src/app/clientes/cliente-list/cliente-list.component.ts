@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
-import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption } from '@totvs/thf-ui';
+import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction } from '@totvs/thf-ui';
 
 @Component({
   selector: 'app-cliente-list',
@@ -14,22 +14,17 @@ export class ClienteListComponent implements OnInit {
 
   // Url do servidor de exemplo
   private readonly url: string = 'https://sample-customers-api.herokuapp.com/api/thf-samples/v1/people';
+  
+  // Objetos para consultar os dados e armazenar os clientes
   private clienteSub = Subscription;
-  private page: number = 1;
-
   public clientes: Array<any> = [];
-  public loading: boolean = true;
+
+  // Controle de loading e paginação
   public hasNext: boolean = false;
+  private page: number = 1;
+  public loading: boolean = true;
 
-  public searchTerm: string = '';
-
-  public readonly filter: ThfPageFilter = {
-    action: this.onActionSearch.bind(this),
-    ngModel: 'searchTerm',
-    placeholder: 'Pesquisar por ...',
-    advancedAction: this.openAdvancedFilter.bind(this),
-  }
-
+  // Configuração das colunas
   public readonly colunas: Array<ThfTableColumn> = [
     // Definição das colunas
     {property: 'name', label: 'Nome Completo'},
@@ -47,6 +42,23 @@ export class ClienteListComponent implements OnInit {
       { value: 'Inactive', color: 'danger', label: 'Inativo' }
     ]},    
   ];
+
+
+  // Propriedades para busca rápida:
+  public searchTerm: string = '';
+
+  public readonly filter: ThfPageFilter = {
+    action: this.onActionSearch.bind(this),
+    ngModel: 'searchTerm',
+    placeholder: 'Pesquisar por ...',
+    advancedAction: this.openAdvancedFilter.bind(this),
+  }
+
+  //  Propriedades para Busca Avançada
+  public city: string;
+  public genre: string;
+  public name: string;
+  public status: Array<string> = []; 
 
   public readonly cityOptions: Array<ThfComboOption> = [
     { label: 'Araquari', value: 'Araquari' },
@@ -72,8 +84,22 @@ export class ClienteListComponent implements OnInit {
     { label: 'Inativo', value: 'Inactive' }    
   ]
 
+  /** bind do componente modal para pesquisa avançada */
   @ViewChild('advancedFilter') advancedFilter: ThfModalComponent;
 
+  /** Objeto que define a confirmação da pesquisa avançada */
+  public readonly advancedFilterPrimaryAction: ThfModalAction = {
+    action: this.onConfirmAdvancedFilter.bind(this),
+    label: 'Pesquisar',
+  }
+
+  /** @description Cancelamento da pesquisa avançada */
+  public readonly advancedFilterSecondaryAction: ThfModalAction = {
+    action: () => this.advancedFilter.close(),
+    label: 'Cancelar',
+  }
+
+  /** @description Construtor da classe */
   constructor(private httpClient: HttpClient) { }
 
   ngOnInit() {
@@ -84,14 +110,17 @@ export class ClienteListComponent implements OnInit {
     this.clienteSub.unsubscribe();
   }
   
+  /** @description Carregar mais dados, controlando resultados da busca e paginação */
   showMore() {
     this.loadData({ page: ++this.page, search: this.searchTerm });
   }
 
+  /** @description Ação do botão busca avançada */
   openAdvancedFilter() {
     this.advancedFilter.open();
   }
 
+  /** @description Link de envio de e-mail */
   private sendMail(email, cliente) {
     const body = `Olá ${cliente.name}, gostaríamos de agradecer seu contato.`;
     const subject = `Contato - Cliente ${cliente.name}`;
@@ -99,11 +128,30 @@ export class ClienteListComponent implements OnInit {
     window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_self');
   }
   
+  /** @description Ação da busca rápida */
   private onActionSearch() {
     this.page = 1;
     this.loadData({search: this.searchTerm})
   }
 
+  /** Função de pesquisa avançada */
+  private onConfirmAdvancedFilter() {
+    const filters: any = {
+      name: this.name || '',
+      city: this.city || '',
+      genre: this.genre || '',
+      status: this.status ? this.status.join() : '' // Transforma o checkbox em String separada por ","
+    }
+
+    this.searchTerm = undefined; // Limpa o campo de pesquisa rápida
+    this.page = 1; // Reseta a paginação
+
+    this.loadData(filters);
+
+    this.advancedFilter.close(); // Fecha o modal de pesquisa avançada
+  }
+
+  /** @description Consulta dos dados */
   public loadData(params: { page?: number, search?: string} = {}) {
     this.loading = true;
 
