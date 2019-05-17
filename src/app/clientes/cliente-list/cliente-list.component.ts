@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
-import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption } from '@totvs/thf-ui';
+import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption } from '@totvs/thf-ui';
 
 @Component({
   selector: 'app-cliente-list',
@@ -60,6 +60,17 @@ export class ClienteListComponent implements OnInit {
     { label: 'São Francisco', value: 'São Francisco' },
     { label: 'São Paulo', value: 'São Paulo' }    
   ];
+
+  public readonly genreOptions: Array<ThfRadioGroupOption> = [
+    { label: 'Feminino', value: 'Female' },
+    { label: 'Masculino', value: 'Male' },
+    { label: 'Outros', value: 'Other' }    
+  ]
+
+  public readonly statusOptions: Array<ThfCheckboxGroupOption> = [
+    { label: 'Ativo', value: 'Active' },
+    { label: 'Inativo', value: 'Inactive' }    
+  ]
 
   @ViewChild('advancedFilter') advancedFilter: ThfModalComponent;
 

@@ -34,6 +34,25 @@
       [t-options]="cityOptions">
 
     </thf-combo>
+    
+    <thf-radio-group
+      class="thf-sm-8"
+      name="genre"
+      [(ngModel)]="genre"
+      t-columns="3"
+      t-label="Gênero"
+      [t-options]="genreOptions">
+
+    </thf-radio-group>
+    
+    <thf-checkbox-group
+      class="thf-sm-5"
+      name="status"
+      [(ngModel)]="status"
+      t-label="Status"
+      [t-options]="statusOptions">
+
+    </thf-checkbox-group>
 
   </form>
 
