@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
-import { ThfTableColumn, ThfPageFilter } from '@totvs/thf-ui';
+import { ThfTableColumn, ThfPageFilter, ThfModalComponent } from '@totvs/thf-ui';
 
 @Component({
   selector: 'app-cliente-list',
@@ -26,7 +26,8 @@ export class ClienteListComponent implements OnInit {
   public readonly filter: ThfPageFilter = {
     action: this.onActionSearch.bind(this),
     ngModel: 'searchTerm',
-    placeholder: 'Pesquisar por ...'
+    placeholder: 'Pesquisar por ...',
+    advancedAction: this.openAdvancedFilter.bind(this),
   }
 
   public readonly colunas: Array<ThfTableColumn> = [
@@ -47,6 +48,8 @@ export class ClienteListComponent implements OnInit {
     ]},    
   ];
 
+  @ViewChild('advancedFilter') advancedFilter: ThfModalComponent;
+
   constructor(private httpClient: HttpClient) { }
 
   ngOnInit() {
@@ -59,6 +62,10 @@ export class ClienteListComponent implements OnInit {
   
   showMore() {
     this.loadData({ page: ++this.page, search: this.searchTerm });
+  }
+
+  openAdvancedFilter() {
+    this.advancedFilter.open();
   }
 
   private sendMail(email, cliente) {
