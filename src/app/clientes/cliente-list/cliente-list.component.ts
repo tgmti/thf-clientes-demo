@@ -24,7 +24,7 @@ export class ClienteListComponent implements OnInit {
   public searchTerm: string = '';
 
   public readonly filter: ThfPageFilter = {
-    action: this.loadData.bind(this),
+    action: this.onActionSearch.bind(this),
     ngModel: 'searchTerm',
     placeholder: 'Pesquisar por ...'
   }
@@ -57,6 +57,10 @@ export class ClienteListComponent implements OnInit {
     this.clienteSub.unsubscribe();
   }
   
+  showMore() {
+    this.loadData({ page: ++this.page, search: this.searchTerm });
+  }
+
   private sendMail(email, cliente) {
     const body = `Olá ${cliente.name}, gostaríamos de agradecer seu contato.`;
     const subject = `Contato - Cliente ${cliente.name}`;
@@ -64,15 +68,19 @@ export class ClienteListComponent implements OnInit {
     window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_self');
   }
   
-  public loadData() {
-    
-    const urlWithPagination = `${this.url}?page=${this.page}&search=${this.searchTerm}`;
-    
+  private onActionSearch() {
+    this.page = 1;
+    this.loadData({search: this.searchTerm})
+  }
+
+  public loadData(params: { page?: number, search?: string} = {}) {
     this.loading = true;
 
-    this.clienteSub = this.httpClient.get(urlWithPagination)
+    this.clienteSub = this.httpClient.get(this.url, { params: <any>params })
       .subscribe((response: {hasNext: boolean, items: Array<any>}) => {
-        this.clientes = [...this.clientes, ...response.items];
+        this.clientes = !params.page || params.page === 1 
+          ? response.items
+          : [...this.clientes, ...response.items];
         this.hasNext = response.hasNext;
         this.loading = false;
       });

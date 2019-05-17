@@ -1,7 +1,7 @@
 <thf-page-list
   t-title="Listagem de Clientes"
   [t-filter]="filter">
-  
+
   <!-- Tabela para exibição dos dados -->
   <thf-table
     t-sort="true"
@@ -9,7 +9,7 @@
     [t-items]="clientes"
     [t-loading]="loading"
     [t-show-more-disabled]="!hasNext"
-    (t-show-more)="loadData()" >
+    (t-show-more)="showMore()" >
   </thf-table>
 
 </thf-page-list>
