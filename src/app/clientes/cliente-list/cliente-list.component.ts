@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
-import { ThfTableColumn, ThfPageFilter, ThfModalComponent } from '@totvs/thf-ui';
+import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption } from '@totvs/thf-ui';
 
 @Component({
   selector: 'app-cliente-list',
@@ -46,6 +46,19 @@ export class ClienteListComponent implements OnInit {
       { value: 'Active', color: 'success', label: 'Ativo' },
       { value: 'Inactive', color: 'danger', label: 'Inativo' }
     ]},    
+  ];
+
+  public readonly cityOptions: Array<ThfComboOption> = [
+    { label: 'Araquari', value: 'Araquari' },
+    { label: 'Belém', value: 'Belém' },
+    { label: 'Campinas', value: 'Campinas' },
+    { label: 'Curitiba', value: 'Curitiba' },
+    { label: 'Joinville', value: 'Joinville' },
+    { label: 'Osasco', value: 'Osasco' },
+    { label: 'Rio de Janeiro', value: 'Rio de Janeiro' },
+    { label: 'São Bento', value: 'São Bento' },
+    { label: 'São Francisco', value: 'São Francisco' },
+    { label: 'São Paulo', value: 'São Paulo' }    
   ];
 
   @ViewChild('advancedFilter') advancedFilter: ThfModalComponent;

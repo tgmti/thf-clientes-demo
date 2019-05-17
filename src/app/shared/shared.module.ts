@@ -7,7 +7,7 @@ import { ThfModule } from '@totvs/thf-ui';
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
+    FormsModule, /* Usado na busca avançada */
     ThfModule
   ],
   exports: [
