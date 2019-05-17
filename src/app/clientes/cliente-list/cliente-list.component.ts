@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
-import { ThfTableColumn } from '@totvs/thf-ui';
+import { ThfTableColumn, ThfPageFilter } from '@totvs/thf-ui';
 
 @Component({
   selector: 'app-cliente-list',
@@ -20,6 +20,14 @@ export class ClienteListComponent implements OnInit {
   public clientes: Array<any> = [];
   public loading: boolean = true;
   public hasNext: boolean = false;
+
+  public searchTerm: string = '';
+
+  public readonly filter: ThfPageFilter = {
+    action: this.loadData.bind(this),
+    ngModel: 'searchTerm',
+    placeholder: 'Pesquisar por ...'
+  }
 
   public readonly colunas: Array<ThfTableColumn> = [
     // Definição das colunas
@@ -58,7 +66,7 @@ export class ClienteListComponent implements OnInit {
   
   public loadData() {
     
-    const urlWithPagination = `${this.url}?page=${this.page}`;
+    const urlWithPagination = `${this.url}?page=${this.page}&search=${this.searchTerm}`;
     
     this.loading = true;
 
