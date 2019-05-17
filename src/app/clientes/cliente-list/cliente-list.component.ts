@@ -55,6 +55,7 @@ export class ClienteListComponent implements OnInit {
   }
 
   //  Propriedades para Busca Avançada
+  private searchFilters:any;
   public city: string;
   public genre: string;
   public name: string;
@@ -112,7 +113,16 @@ export class ClienteListComponent implements OnInit {
   
   /** @description Carregar mais dados, controlando resultados da busca e paginação */
   showMore() {
-    this.loadData({ page: ++this.page, search: this.searchTerm });
+    let params: any = {
+      page: ++this.page
+    }
+
+    if (this.searchTerm) {
+      params.search = this.searchTerm
+    } else {
+      params = { ...params, ...this.searchFilters }
+    }    
+    this.loadData(params);
   }
 
   /** @description Ação do botão busca avançada */
@@ -130,13 +140,15 @@ export class ClienteListComponent implements OnInit {
   
   /** @description Ação da busca rápida */
   private onActionSearch() {
+    this.searchFilters = {};
     this.page = 1;
+
     this.loadData({search: this.searchTerm})
   }
 
   /** Função de pesquisa avançada */
   private onConfirmAdvancedFilter() {
-    const filters: any = {
+    this.searchFilters = {
       name: this.name || '',
       city: this.city || '',
       genre: this.genre || '',
@@ -146,7 +158,7 @@ export class ClienteListComponent implements OnInit {
     this.searchTerm = undefined; // Limpa o campo de pesquisa rápida
     this.page = 1; // Reseta a paginação
 
-    this.loadData(filters);
+    this.loadData(this.searchFilters);
 
     this.advancedFilter.close(); // Fecha o modal de pesquisa avançada
   }
