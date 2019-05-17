@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
-import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction } from '@totvs/thf-ui';
+import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup } from '@totvs/thf-ui';
 
 @Component({
   selector: 'app-cliente-list',
@@ -94,6 +94,12 @@ export class ClienteListComponent implements OnInit {
     label: 'Pesquisar',
   }
 
+  /** Objeto para demonstrar quais os filtros aplicados na página */
+  public readonly disclaimerGroup: ThfDisclaimerGroup = {
+    label: 'Filtros',
+    disclaimers: [],
+  }
+
   /** @description Cancelamento da pesquisa avançada */
   public readonly advancedFilterSecondaryAction: ThfModalAction = {
     action: () => this.advancedFilter.close(),
@@ -144,6 +150,13 @@ export class ClienteListComponent implements OnInit {
     this.page = 1;
 
     this.loadData({search: this.searchTerm})
+
+    this.disclaimerGroup.disclaimers = [{
+      label: `Pesquisa rápida: ${this.searchTerm}`,
+      property: 'search',
+      value: this.searchTerm
+    }];    
+
   }
 
   /** Função de pesquisa avançada */
