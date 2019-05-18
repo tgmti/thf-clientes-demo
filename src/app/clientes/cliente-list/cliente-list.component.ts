@@ -96,7 +96,8 @@ export class ClienteListComponent implements OnInit {
 
   /** Objeto para demonstrar quais os filtros aplicados na página */
   public readonly disclaimerGroup: ThfDisclaimerGroup = {
-    label: 'Filtros',
+    change: this.onChangeDisclaimerGroup.bind(this),
+    title: 'Filtros',
     disclaimers: [],
   }
 
@@ -176,18 +177,26 @@ export class ClienteListComponent implements OnInit {
     this.advancedFilter.close(); // Fecha o modal de pesquisa avançada
   }
 
+  /** @description Ação efetuada na atualização do disclaimerGroup */
+  private onChangeDisclaimerGroup() {
+    this.searchTerm = undefined;
+    this.page = 1;
+    this.loadData();
+  }
+
   /** @description Consulta dos dados */
   public loadData(params: { page?: number, search?: string} = {}) {
     this.loading = true;
-
+    console.log('buscando...')
     this.clienteSub = this.httpClient.get(this.url, { params: <any>params })
-      .subscribe((response: {hasNext: boolean, items: Array<any>}) => {
-        this.clientes = !params.page || params.page === 1 
-          ? response.items
-          : [...this.clientes, ...response.items];
-        this.hasNext = response.hasNext;
-        this.loading = false;
-      });
+    .subscribe((response: {hasNext: boolean, items: Array<any>}) => {
+      this.clientes = !params.page || params.page === 1 
+      ? response.items
+      : [...this.clientes, ...response.items];
+      this.hasNext = response.hasNext;
+      this.loading = false;
+      console.log('retornou', response.items)
+    });
   }
 
 }
