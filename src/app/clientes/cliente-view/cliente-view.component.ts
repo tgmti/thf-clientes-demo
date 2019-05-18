@@ -16,6 +16,8 @@ export class ClienteViewComponent implements OnInit, OnDestroy {
   private customerSub: Subscription;
   private paramsSub: Subscription;
 
+  cliente: any = {};
+
   constructor(private httpClient: HttpClient, private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -29,7 +31,7 @@ export class ClienteViewComponent implements OnInit, OnDestroy {
 
   /** Função que carrega os dados do cliente */
   private loadData(id) {
-    this.customerSub = this.httpClient.get(`${this.url}/${id}`).subscribe(console.log);
+    this.customerSub = this.httpClient.get(`${this.url}/${id}`).subscribe(response => this.cliente = response);
   }
 
 }
