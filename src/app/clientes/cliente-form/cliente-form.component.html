@@ -1,15 +1,34 @@
 <thf-page-edit
-  t-title="Novo Cliente">
+  t-title="Novo Cliente"
+  [t-disable-submit]="formCliente.invalid">
 
   {{cliente | json}}
   <hr>
 
-  <thf-input class="thf-md6" 
-    name="name" 
-    [(ngModel)]="cliente.name" 
-    t-label="Nome Completo">
+  <form #formCliente="ngForm">
+    <thf-input class="thf-md6" 
+      name="name" 
+      [(ngModel)]="cliente.name" 
+      t-required
+      t-label="Nome Completo">
+    </thf-input>
 
-  </thf-input>
+    <thf-input class="thf-md-6"
+      name="email"
+      [(ngModel)]="cliente.email"
+      t-required
+      t-label="E-mail">
+    </thf-input>
+
+    <thf-input class="thf-md-6"
+      name="status"
+      [(ngModel)]="cliente.status"
+      t-required
+      t-label="Status">
+    </thf-input> 
+
+  </form>
+
 
 
 </thf-page-edit>
