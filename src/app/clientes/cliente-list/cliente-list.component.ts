@@ -157,17 +157,16 @@ export class ClienteListComponent implements OnInit {
 
   /** Função de pesquisa avançada */
   private onConfirmAdvancedFilter() {
-    this.searchFilters = {
-      name: this.name || '',
-      city: this.city || '',
-      genre: this.genre || '',
-      status: this.status ? this.status.join() : '' // Transforma o checkbox em String separada por ","
-    }
 
-    this.searchTerm = undefined; // Limpa o campo de pesquisa rápida
-    this.page = 1; // Reseta a paginação
+    const addDisclaimer = (property: string, value: string, label: string) => 
+      this.disclaimerGroup.disclaimers.push({property, value, label: `${label}: ${value}`});
 
-    this.loadData(this.searchFilters);
+    this.disclaimerGroup.disclaimers = [];
+
+    addDisclaimer('city', this.city, 'Cidade')
+    addDisclaimer('genre', this.genre, 'Gênero')
+    addDisclaimer('name', this.name, 'Nome')
+    addDisclaimer('status', this.status ? this.status.join() : '', 'Status')
 
     this.advancedFilter.close(); // Fecha o modal de pesquisa avançada
   }
