@@ -1,12 +1,78 @@
 <thf-page-detail 
   t-title="Detalhes do cliente">
 
-  <thf-info t-label="Nome" [t-value]="cliente.name"></thf-info>
+  <thf-divider class="thf-sm-12" t-label="Dados pessoais"></thf-divider>
+  <div class="thf-row">
+    <thf-info class="thf-md-5"
+    t-label="Nome"
+    [t-value]="cliente.name">
+  </thf-info>
+  
+  <thf-info class="thf-md-5"
+  t-label="E-mail"
+  [t-value]="cliente.email">
+</thf-info>
 
-  <thf-info t-label="Nascimento" [t-value]="cliente.birthdate"></thf-info>
+<thf-tag class="thf-md-2"
+t-label="Status"
+[t-value]="cliente.status">
+</thf-tag>
+</div>
 
-  <thf-info t-label="Gênero" [t-value]="cliente.genre"></thf-info>
+<div class="thf-row">
+  <thf-info class="thf-md-3"
+  t-label="Apelido"
+  [t-value]="cliente.nickname">
+</thf-info>
 
-  <thf-info t-label="Status" [t-value]="cliente.status"></thf-info>
+<thf-info class="thf-md-3"
+t-label="Nascimento"
+[t-value]="cliente.birthdate">
+</thf-info>
 
+<thf-info class="thf-md-3"
+t-label="Gênero"
+[t-value]="cliente.genre">
+</thf-info>
+
+<thf-info class="thf-md-3"
+t-label="Nacionalidade"
+[t-value]="cliente.nationality">
+</thf-info>
+</div>
+
+<thf-divider class="thf-sm-12" t-label="Filiação"></thf-divider>
+
+<div class="thf-row">
+  <thf-info class="thf-md-5"
+  t-label="Nome da mãe"
+  [t-value]="cliente.mother">
+</thf-info>
+
+<thf-info class="thf-md-5"
+t-label="Nome do pai"
+[t-value]="cliente.father">
+</thf-info>
+</div>
+
+<thf-divider class="thf-sm-12" t-label="Endereço"></thf-divider>
+
+<div class="thf-row">
+  <thf-info class="thf-md-6"
+  t-label="Rua"
+  [t-value]="cliente.street">
+    </thf-info>
+
+    <thf-info class="thf-md-3"
+      t-label="Cidade/Estado"
+      [t-value]="cliente.city">
+    </thf-info>
+
+    <thf-info class="thf-md-3"
+      t-label="País"
+      [t-value]="cliente.country">
+    </thf-info>
+  </div>
+
+  
 </thf-page-detail>
