@@ -13,19 +13,21 @@
       t-label="Nome Completo">
     </thf-input>
 
-    <thf-input class="thf-md-6"
+    <thf-email class="thf-md-6"
       name="email"
       [(ngModel)]="cliente.email"
       t-required
       t-label="E-mail">
-    </thf-input>
+    </thf-email>
 
-    <thf-input class="thf-md-6"
+    <thf-switch class="thf-md-6"
       name="status"
       [(ngModel)]="cliente.status"
       t-required
+      t-label-off="Inativo"
+      t-label-on="Ativo"
       t-label="Status">
-    </thf-input> 
+    </thf-switch > 
 
   </form>
 

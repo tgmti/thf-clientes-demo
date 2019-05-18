@@ -32,6 +32,9 @@ export class ClienteFormComponent implements OnInit {
   }
 
   save(){
+    const cliente = {...this.cliente};
+    cliente.status = cliente.status ? 'Active' : 'Inactive';
+    
     this.clienteSub = this.httpClient.post(this.url, this.cliente).subscribe(() => {
       this.thfNotification.success('Cliente cadastrado com sucesso');
       this.router.navigateByUrl('/clientes');
