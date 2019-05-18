@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 export class ClienteFormComponent implements OnInit {
 
   private readonly url: string = 'https://sample-customers-api.herokuapp.com/api/thf-samples/v1/people';
-  private readonly clienteSub: Subscription;
+  private clienteSub: Subscription;
 
   public cliente: any = {};
 

@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
-import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup, ThfDisclaimer, ThfPageAction } from '@totvs/thf-ui';
+import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup, ThfDisclaimer, ThfPageAction, ThfTableAction } from '@totvs/thf-ui';
 import { Router } from '@angular/router';
 
 @Component({
@@ -113,6 +113,11 @@ export class ClienteListComponent implements OnInit {
     { action: this.onNewCustomer.bind(this), label: 'Cadastrar', icon: 'thf-icon-user-add' }
   ];
 
+  /** @description Ações para a tabela de listagem */
+  public readonly tableActions: Array<ThfTableAction> = [
+    { action: this.onViewCustomer.bind(this), label: 'Visualizar' }
+  ];
+
   /** @description Construtor da classe */
   constructor(private httpClient: HttpClient, private router: Router) { }
 
@@ -141,6 +146,11 @@ export class ClienteListComponent implements OnInit {
   /** @description Ação do botão busca avançada */
   private onNewCustomer() {
     this.router.navigateByUrl('/clientes/new');
+  }
+  
+  /** @description Ação do botão busca avançada */
+  private onViewCustomer(cliente: any) {
+    this.router.navigateByUrl(`/clientes/view/${cliente.id}`);
   }
 
   /** @description Ação do botão busca avançada */
