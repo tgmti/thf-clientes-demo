@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ThfNotificationService, ThfSelectOption } from '@totvs/thf-ui';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+
+const actionInsert = 'insert';
+const actionUpdate = 'update';
 
 @Component({
   selector: 'app-cliente-form',
@@ -11,8 +14,10 @@ import { Subscription } from 'rxjs';
 })
 export class ClienteFormComponent implements OnInit {
 
+  private action: string = actionInsert;
   private readonly url: string = 'https://sample-customers-api.herokuapp.com/api/thf-samples/v1/people';
   private clienteSub: Subscription;
+  private paramsSub: Subscription;
 
   public cliente: any = {};
 
@@ -25,16 +30,26 @@ export class ClienteFormComponent implements OnInit {
   constructor(
     private thfNotification: ThfNotificationService,
     private router: Router,
-    private httpClient: HttpClient) {
+    private httpClient: HttpClient,
+    private route: ActivatedRoute) {
 
     }
 
   ngOnInit() {
+    this.paramsSub = this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.loadData(params['id']);
+        this.action = actionUpdate;
+      }
+    });
   }
 
   ngOnDestroy() {
     if (this.clienteSub)
       this.clienteSub.unsubscribe();
+
+    if (this.paramsSub)
+      this.paramsSub.unsubscribe();
   }
 
   save(){
@@ -49,6 +64,19 @@ export class ClienteFormComponent implements OnInit {
   
   cancel(){
     this.router.navigateByUrl('/clientes');
+  }
+
+  get title() {
+    return this.isUpdateOperation ? 'Atualizando dados do cliente' : 'Novo cliente';
+  }
+
+  get isUpdateOperation() {
+    return this.action === actionUpdate;
+  }
+
+  private loadData(id) {
+    this.clienteSub = this.httpClient.get(`${this.url}/${id}`)
+      .subscribe(response => this.cliente = response);
   }
 
 }
