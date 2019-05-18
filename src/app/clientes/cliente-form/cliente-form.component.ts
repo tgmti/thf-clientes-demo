@@ -33,7 +33,8 @@ export class ClienteFormComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.clienteSub.unsubscribe();
+    if (this.clienteSub)
+      this.clienteSub.unsubscribe();
   }
 
   save(){
@@ -44,6 +45,10 @@ export class ClienteFormComponent implements OnInit {
       this.thfNotification.success('Cliente cadastrado com sucesso');
       this.router.navigateByUrl('/clientes');
     });
+  }
+  
+  cancel(){
+    this.router.navigateByUrl('/clientes');
   }
 
 }

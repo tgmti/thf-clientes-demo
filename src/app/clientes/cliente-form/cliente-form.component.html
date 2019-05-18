@@ -6,6 +6,9 @@
   <hr>
 
   <form #formCliente="ngForm">
+
+    <thf-divider class="thf-sm-12" t-label="Dados pessoais"></thf-divider>
+
     <thf-input class="thf-md-5" 
       name="name" 
       [(ngModel)]="cliente.name" 
@@ -47,6 +50,27 @@
       t-label="Gênero"
       [t-options]="genreOptions">
     </thf-select>
+
+    <thf-divider class="thf-sm-12" t-label="Endereço"></thf-divider>
+
+    <thf-input class="thf-md-6"
+      name="street"
+      [(ngModel)]="cliente.street"
+      t-label="Rua">
+    </thf-input>
+
+    <thf-input class="thf-md-3"
+      name="city"
+      [(ngModel)]="cliente.city"
+      t-label="Cidade/Estado">
+    </thf-input>
+
+    <thf-input class="thf-md-3"
+      name="country"
+      [(ngModel)]="cliente.country"
+      t-label="País">
+    </thf-input>    
+
 
   </form>
 
