@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
@@ -20,7 +20,7 @@ export class ClienteViewComponent implements OnInit, OnDestroy {
 
   cliente: any = {};
 
-  constructor(private httpClient: HttpClient, private route: ActivatedRoute) { }
+  constructor(private httpClient: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.paramsSub = this.route.params.subscribe(params => this.loadData(params['id']));
@@ -29,6 +29,10 @@ export class ClienteViewComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.paramsSub.unsubscribe();
     this.customerSub.unsubscribe();
+  }
+
+  back() {
+    this.router.navigateByUrl('clientes');
   }
 
   /** Função que carrega os dados do cliente */
