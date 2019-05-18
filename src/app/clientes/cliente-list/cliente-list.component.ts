@@ -3,7 +3,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
-import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup, ThfDisclaimer } from '@totvs/thf-ui';
+import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup, ThfDisclaimer, ThfPageAction } from '@totvs/thf-ui';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cliente-list',
@@ -107,8 +108,13 @@ export class ClienteListComponent implements OnInit {
     label: 'Cancelar',
   }
 
+  /** @description Ações da tela de listagem */
+  public readonly actions: Array<ThfPageAction> = [
+    { action: this.onNewCustomer.bind(this), label: 'Cadastrar', icon: 'thf-icon-user-add' }
+  ];
+
   /** @description Construtor da classe */
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private router: Router) { }
 
   ngOnInit() {
     this.loadData();
@@ -130,6 +136,11 @@ export class ClienteListComponent implements OnInit {
       params = { ...params, ...this.searchFilters }
     }    
     this.loadData(params);
+  }
+
+  /** @description Ação do botão busca avançada */
+  private onNewCustomer() {
+    this.router.navigateByUrl('/clientes/new');
   }
 
   /** @description Ação do botão busca avançada */
@@ -188,7 +199,6 @@ export class ClienteListComponent implements OnInit {
   /** @description Consulta dos dados */
   public loadData(params: { page?: number, search?: string} = {}) {
     this.loading = true;
-    console.log('buscando...')
     this.clienteSub = this.httpClient.get(this.url, { params: <any>params })
     .subscribe((response: {hasNext: boolean, items: Array<any>}) => {
       this.clientes = !params.page || params.page === 1 
@@ -196,7 +206,6 @@ export class ClienteListComponent implements OnInit {
       : [...this.clientes, ...response.items];
       this.hasNext = response.hasNext;
       this.loading = false;
-      console.log('retornou', response.items)
     });
   }
 
