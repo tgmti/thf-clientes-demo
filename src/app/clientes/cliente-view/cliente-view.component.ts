@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
+import { map } from 'rxjs/operators';
+
 @Component({
   selector: 'app-cliente-view',
   templateUrl: './cliente-view.component.html',
@@ -31,7 +33,20 @@ export class ClienteViewComponent implements OnInit, OnDestroy {
 
   /** Função que carrega os dados do cliente */
   private loadData(id) {
-    this.customerSub = this.httpClient.get(`${this.url}/${id}`).subscribe(response => this.cliente = response);
+    this.customerSub = this.httpClient.get(`${this.url}/${id}`)
+    .pipe(
+      map((cli: any) => {
+        const status = { Active: 'Ativo', Inactive: 'Inativo' };
+
+        const genre = { Female: 'Feminino', Male: 'Masculino', Other: 'Outros' };
+
+        cli.status = status[cli.status];
+        cli.genre = genre[cli.genre];
+
+        return cli;
+      })
+    )
+    .subscribe(response => this.cliente = response);
   }
 
 }
