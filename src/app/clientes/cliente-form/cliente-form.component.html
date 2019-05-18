@@ -1,4 +1,15 @@
 <thf-page-edit
   t-title="Novo Cliente">
 
+  {{cliente | json}}
+  <hr>
+
+  <thf-input class="thf-md6" 
+    name="name" 
+    [(ngModel)]="cliente.name" 
+    t-label="Nome Completo">
+
+  </thf-input>
+
+
 </thf-page-edit>

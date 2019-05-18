@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-cliente-form',
@@ -7,15 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ClienteFormComponent implements OnInit {
 
-  public cliente: any;
+  private readonly url: string = 'https://sample-customers-api.herokuapp.com/api/thf-samples/v1/people';
 
-  constructor() { }
+  public cliente: any = {};
+
+
+  constructor(private httpClient: HttpClient) { }
 
   ngOnInit() {
   }
 
   save(){
-    
+    this.httpClient.post(this.url, this.cliente);
   }
 
 }
