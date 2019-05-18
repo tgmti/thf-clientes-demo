@@ -115,7 +115,8 @@ export class ClienteListComponent implements OnInit {
 
   /** @description Ações para a tabela de listagem */
   public readonly tableActions: Array<ThfTableAction> = [
-    { action: this.onViewCustomer.bind(this), label: 'Visualizar' }
+    { action: this.onViewCustomer.bind(this), label: 'Visualizar' },
+    { action: this.onEditCustomer.bind(this), label: 'Editar' },
   ];
 
   /** @description Construtor da classe */
@@ -148,9 +149,14 @@ export class ClienteListComponent implements OnInit {
     this.router.navigateByUrl('/clientes/new');
   }
   
-  /** @description Ação do botão busca avançada */
+  /** @description Ação do link de visualização */
   private onViewCustomer(cliente: any) {
     this.router.navigateByUrl(`/clientes/view/${cliente.id}`);
+  }
+ 
+  /** @description Ação do link de edição */
+  private onEditCustomer(customer) {
+    this.router.navigateByUrl(`/clientes/edit/${customer.id}`);
   }
 
   /** @description Ação do botão busca avançada */
