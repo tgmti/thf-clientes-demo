@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
-import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup } from '@totvs/thf-ui';
+import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup, ThfDisclaimer } from '@totvs/thf-ui';
 
 @Component({
   selector: 'app-cliente-list',
@@ -147,11 +147,6 @@ export class ClienteListComponent implements OnInit {
   
   /** @description Ação da busca rápida */
   private onActionSearch() {
-    this.searchFilters = {};
-    this.page = 1;
-
-    this.loadData({search: this.searchTerm})
-
     this.disclaimerGroup.disclaimers = [{
       label: `Pesquisa rápida: ${this.searchTerm}`,
       property: 'search',
@@ -178,10 +173,17 @@ export class ClienteListComponent implements OnInit {
   }
 
   /** @description Ação efetuada na atualização do disclaimerGroup */
-  private onChangeDisclaimerGroup() {
-    this.searchTerm = undefined;
+  private onChangeDisclaimerGroup(disclaimers: Array<ThfDisclaimer>) {
+    this.searchFilters = {};
     this.page = 1;
-    this.loadData();
+
+    disclaimers.forEach(disclaimer => this.searchFilters[disclaimer.property] = disclaimer.value);
+
+    if (!this.searchFilters.search) {
+      this.searchTerm = undefined;
+    }
+
+    this.loadData(this.searchFilters);
   }
 
   /** @description Consulta dos dados */
