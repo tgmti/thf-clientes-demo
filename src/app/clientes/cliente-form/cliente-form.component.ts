@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ThfNotificationService } from '@totvs/thf-ui';
+import { ThfNotificationService, ThfSelectOption } from '@totvs/thf-ui';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -16,6 +16,11 @@ export class ClienteFormComponent implements OnInit {
 
   public cliente: any = {};
 
+  public readonly genreOptions: Array<ThfSelectOption> = [
+    { label: 'Feminino', value: 'Female' },
+    { label: 'Masculino', value: 'Male' },
+    { label: 'Outros', value: 'Other' }
+  ];
 
   constructor(
     private thfNotification: ThfNotificationService,
@@ -34,8 +39,8 @@ export class ClienteFormComponent implements OnInit {
   save(){
     const cliente = {...this.cliente};
     cliente.status = cliente.status ? 'Active' : 'Inactive';
-    
-    this.clienteSub = this.httpClient.post(this.url, this.cliente).subscribe(() => {
+
+    this.clienteSub = this.httpClient.post(this.url, cliente).subscribe(() => {
       this.thfNotification.success('Cliente cadastrado com sucesso');
       this.router.navigateByUrl('/clientes');
     });

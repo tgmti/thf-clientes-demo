@@ -6,21 +6,21 @@
   <hr>
 
   <form #formCliente="ngForm">
-    <thf-input class="thf-md6" 
+    <thf-input class="thf-md-5" 
       name="name" 
       [(ngModel)]="cliente.name" 
       t-required
       t-label="Nome Completo">
     </thf-input>
 
-    <thf-email class="thf-md-6"
+    <thf-email class="thf-md-5"
       name="email"
       [(ngModel)]="cliente.email"
       t-required
       t-label="E-mail">
     </thf-email>
 
-    <thf-switch class="thf-md-6"
+    <thf-switch class="thf-md-2"
       name="status"
       [(ngModel)]="cliente.status"
       t-required
@@ -28,6 +28,25 @@
       t-label-on="Ativo"
       t-label="Status">
     </thf-switch > 
+
+    <thf-input class="thf-md-3"
+      name="nickname"
+      [(ngModel)]="cliente.nickname"
+      t-label="Apelido">
+    </thf-input>
+
+    <thf-datepicker class="thf-md-3"
+      name="birthdate"
+      [(ngModel)]="cliente.birthdate"
+      t-label="Nascimento">
+    </thf-datepicker>
+
+    <thf-select class="thf-md-3"
+      name="genre"
+      [(ngModel)]="cliente.genre"
+      t-label="Gênero"
+      [t-options]="genreOptions">
+    </thf-select>
 
   </form>
 
