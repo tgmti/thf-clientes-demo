@@ -3,7 +3,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
-import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup, ThfDisclaimer, ThfPageAction, ThfTableAction, ThfNotificationService } from '@totvs/thf-ui';
+import { ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup, ThfDisclaimer, ThfPageAction, ThfNotificationService } from '@totvs/thf-ui';
+import { ThfTableAction, ThfTableColumn, ThfTableComponent } from '@totvs/thf-ui/components/thf-table';
+
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,6 +22,7 @@ export class ClienteListComponent implements OnInit {
   private clienteSub = Subscription;
   public clientes: Array<any> = [];
   public clienteRemoveSub: Subscription;
+  public clientesRemoveSub: Subscription;
 
   // Controle de loading e paginação
   public hasNext: boolean = false;
@@ -90,6 +93,9 @@ export class ClienteListComponent implements OnInit {
   /** bind do componente modal para pesquisa avançada */
   @ViewChild('advancedFilter') advancedFilter: ThfModalComponent;
 
+  /** bind do componente table para pesquisa avançada */
+  @ViewChild('tableList') tableList: ThfTableComponent;
+
   /** Objeto que define a confirmação da pesquisa avançada */
   public readonly advancedFilterPrimaryAction: ThfModalAction = {
     action: this.onConfirmAdvancedFilter.bind(this),
@@ -111,7 +117,8 @@ export class ClienteListComponent implements OnInit {
 
   /** @description Ações da tela de listagem */
   public readonly actions: Array<ThfPageAction> = [
-    { action: this.onNewCustomer.bind(this), label: 'Cadastrar', icon: 'thf-icon-user-add' }
+    { action: this.onNewCustomer.bind(this), label: 'Cadastrar', icon: 'thf-icon-user-add' },
+    { action: this.onRemoveClientes.bind(this), label: 'Remover clientes' },
   ];
 
   /** @description Ações para a tabela de listagem */
@@ -185,6 +192,21 @@ export class ClienteListComponent implements OnInit {
         this.thfNotification.warning('Cliente Removido com sucesso.');
         this.clientes.splice(this.clientes.indexOf(cli), 1);
       }); 
+  }
+
+  /** @description Ação do botão remover vários */
+  private onRemoveClientes() {
+    const selectedClientes = this.tableList.getSelectedRows();
+    const clientesWithId = selectedClientes.map(cli => ({ id: cli.id}));
+  
+    this.clienteRemoveSub = this.httpClient.request('delete', this.url, { body: clientesWithId } )
+      .subscribe(() => {
+        this.thfNotification.warning('Clientes apagados em lote com sucesso.');
+        
+        selectedClientes.forEach(cli => {
+            this.clientes.splice(this.clientes.indexOf(cli), 1);
+          });
+      });
   }
   
   /** @description Ação do botão busca avançada */

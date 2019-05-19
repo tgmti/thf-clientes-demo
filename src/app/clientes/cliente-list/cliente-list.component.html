@@ -5,14 +5,15 @@
   [t-disclaimer-group]="disclaimerGroup">
 
   <!-- Tabela para exibição dos dados -->
-  <thf-table
+  <thf-table #tableList
     t-sort="true"
     [t-columns]="colunas"
     [t-items]="clientes"
     [t-loading]="loading"
     [t-show-more-disabled]="!hasNext"
     [t-actions]="tableActions"
-    (t-show-more)="showMore()" >
+    (t-show-more)="showMore()"
+    t-checkbox >
   </thf-table>
 
 </thf-page-list>
