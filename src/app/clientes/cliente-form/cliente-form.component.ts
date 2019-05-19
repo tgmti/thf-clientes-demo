@@ -56,12 +56,11 @@ export class ClienteFormComponent implements OnInit {
     const cliente = {...this.cliente};
     cliente.status = cliente.status ? 'Active' : 'Inactive';
 
-    const edit = this.isUpdateOperation;
-    const url = edit ? `${this.url}/${cliente.id}` : this.url;
-    const httpAction = edit ? this.httpClient.put.bind(this) : this.httpClient.post.bind(this);
-    const msg = `Cliente ${edit ? 'atualizado' : 'cadastrado'} com sucesso`;
-
-    this.clienteSub = httpAction(url, cliente).subscribe(() => this.navigateToList(msg));
+    this.clienteSub = this.isUpdateOperation
+      ? this.httpClient.put(`${this.url}/${cliente.id}`, cliente)
+        .subscribe(() => this.navigateToList('Cliente atualizado com sucesso'))
+      : this.httpClient.post(this.url, cliente)
+        .subscribe(() => this.navigateToList('Cliente cadastrado com sucesso'));
 
   }
   
