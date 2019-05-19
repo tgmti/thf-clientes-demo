@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
-import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup, ThfDisclaimer, ThfPageAction, ThfTableAction } from '@totvs/thf-ui';
+import { ThfTableColumn, ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup, ThfDisclaimer, ThfPageAction, ThfTableAction, ThfNotificationService } from '@totvs/thf-ui';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,6 +19,7 @@ export class ClienteListComponent implements OnInit {
   // Objetos para consultar os dados e armazenar os clientes
   private clienteSub = Subscription;
   public clientes: Array<any> = [];
+  public clienteRemoveSub: Subscription;
 
   // Controle de loading e paginação
   public hasNext: boolean = false;
@@ -121,17 +122,26 @@ export class ClienteListComponent implements OnInit {
       disabled: this.canEditCustomer.bind(this), 
       label: 'Editar' 
     },
+    { action: this.onRemoveCustomer.bind(this), label: 'Remover', type: 'danger', separator: true },
   ];
 
   /** @description Construtor da classe */
-  constructor(private httpClient: HttpClient, private router: Router) { }
+  constructor(
+    private httpClient: HttpClient,
+    private thfNotification: ThfNotificationService, 
+    private router: Router) { }
 
   ngOnInit() {
     this.loadData();
   }
   
   ngOnDestroy() {
-    this.clienteSub.unsubscribe();
+
+    if(this.clienteSub)
+      this.clienteSub.unsubscribe();
+    
+    if (this.clienteRemoveSub)  
+      this.clienteRemoveSub.unsubscribe()
   }
   
   /** @description Carregar mais dados, controlando resultados da busca e paginação */
@@ -166,6 +176,15 @@ export class ClienteListComponent implements OnInit {
   /** @description Ação do link de edição */
   private onEditCustomer(customer) {
     this.router.navigateByUrl(`/clientes/edit/${customer.id}`);
+  }
+
+  /** @description Ação do botão remover */
+  private onRemoveCustomer(cli) {
+    this.clienteRemoveSub = this.httpClient.delete(`${this.url}/${cli.id}`)
+      .subscribe(() => {
+        this.thfNotification.warning('Cliente Removido com sucesso.');
+        this.clientes.splice(this.clientes.indexOf(cli), 1);
+      }); 
   }
   
   /** @description Ação do botão busca avançada */
