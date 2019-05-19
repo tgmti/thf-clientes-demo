@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ThfNotificationService, ThfSelectOption } from '@totvs/thf-ui';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const actionInsert = 'insert';
 const actionUpdate = 'update';
@@ -78,6 +79,13 @@ export class ClienteFormComponent implements OnInit {
 
   private loadData(id) {
     this.clienteSub = this.httpClient.get(`${this.url}/${id}`)
+      .pipe(
+        map((cli: any) => {
+          cli.status = cli.status === 'Active';
+
+          return cli;
+        })
+      )
       .subscribe(response => this.cliente = response);
   }
 
