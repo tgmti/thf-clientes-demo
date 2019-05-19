@@ -56,14 +56,17 @@ export class ClienteFormComponent implements OnInit {
     const cliente = {...this.cliente};
     cliente.status = cliente.status ? 'Active' : 'Inactive';
 
-    this.clienteSub = this.httpClient.post(this.url, cliente).subscribe(() => {
-      this.thfNotification.success('Cliente cadastrado com sucesso');
-      this.router.navigateByUrl('/clientes');
-    });
+    const edit = this.isUpdateOperation;
+    const url = edit ? `${this.url}/${cliente.id}` : this.url;
+    const httpAction = edit ? this.httpClient.put.bind(this) : this.httpClient.post.bind(this);
+    const msg = `Cliente ${edit ? 'atualizado' : 'cadastrado'} com sucesso`;
+
+    this.clienteSub = httpAction(url, cliente).subscribe(() => this.navigateToList(msg));
+
   }
   
   cancel(){
-    this.router.navigateByUrl('/clientes');
+    this.navigateToList();
   }
 
   get title() {
@@ -78,5 +81,13 @@ export class ClienteFormComponent implements OnInit {
     this.clienteSub = this.httpClient.get(`${this.url}/${id}`)
       .subscribe(response => this.cliente = response);
   }
+
+  private navigateToList(msg?: string) {
+    if (msg)
+      this.thfNotification.success(msg);
+
+    this.router.navigateByUrl('/clientes');
+  }
+ 
 
 }
