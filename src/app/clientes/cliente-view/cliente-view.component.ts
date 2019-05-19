@@ -31,6 +31,12 @@ export class ClienteViewComponent implements OnInit, OnDestroy {
     this.customerSub.unsubscribe();
   }
 
+  /** Método do botão Editar */
+  edit() {
+    this.router.navigateByUrl(`clientes/edit/${this.cliente.id}`);
+  }
+
+  /** Método do botão Cancelar/Voltar */
   back() {
     this.router.navigateByUrl('clientes');
   }
