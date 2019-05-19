@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { map } from 'rxjs/operators';
+import { ThfNotificationService } from '@totvs/thf-ui';
 
 @Component({
   selector: 'app-cliente-view',
@@ -17,23 +18,44 @@ export class ClienteViewComponent implements OnInit, OnDestroy {
 
   private customerSub: Subscription;
   private paramsSub: Subscription;
+  private customerRemoveSub: Subscription;
 
   cliente: any = {};
 
-  constructor(private httpClient: HttpClient, private route: ActivatedRoute, private router: Router) { }
+  constructor(
+    private httpClient: HttpClient, 
+    private route: ActivatedRoute, 
+    private router: Router,
+    private thfNotification: ThfNotificationService) { }
 
   ngOnInit() {
     this.paramsSub = this.route.params.subscribe(params => this.loadData(params['id']));
   }
 
   ngOnDestroy() {
-    this.paramsSub.unsubscribe();
-    this.customerSub.unsubscribe();
+    if (this.paramsSub)
+      this.paramsSub.unsubscribe();
+    
+    if (this.customerSub)
+      this.customerSub.unsubscribe();
+    
+    if (this.customerRemoveSub)
+      this.customerRemoveSub.unsubscribe();
   }
 
   /** Método do botão Editar */
   edit() {
     this.router.navigateByUrl(`clientes/edit/${this.cliente.id}`);
+  }
+
+  /** Método do botão Remover */
+  remove() {
+    this.customerRemoveSub = this.httpClient.delete(`${this.url}/${this.cliente.id}`)
+      .subscribe(() => {
+        this.thfNotification.warning('Cadastro do cliente apagado com sucesso.');
+
+        this.back();
+      });
   }
 
   /** Método do botão Cancelar/Voltar */

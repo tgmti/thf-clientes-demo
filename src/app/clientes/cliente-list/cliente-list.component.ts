@@ -149,6 +149,9 @@ export class ClienteListComponent implements OnInit {
     
     if (this.clienteRemoveSub)  
       this.clienteRemoveSub.unsubscribe()
+    
+    if (this.clientesRemoveSub)  
+      this.clientesRemoveSub.unsubscribe()
   }
   
   /** @description Carregar mais dados, controlando resultados da busca e paginação */
