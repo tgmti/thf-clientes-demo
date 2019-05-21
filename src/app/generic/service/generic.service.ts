@@ -50,5 +50,9 @@ export class GenericService<T> {
     return this.http.put<T>(`${this.urlApi}/${this.path}/${entity.id}`, entity);
   }
 
+  request(method: string, body: any) {
+    return this.http.request(method, `${this.urlApi}/${this.path}`, { body });
+  }
+
 
 }

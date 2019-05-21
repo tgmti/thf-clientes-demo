@@ -192,7 +192,7 @@ export class ClienteListComponent implements OnInit {
 
   /** @description Ação do botão remover */
   private onRemoveCustomer(cli) {
-    this.clienteRemoveSub = this.httpClient.delete(`${this.url}/${cli.id}`)
+    this.clienteRemoveSub = this.clientesService.delete(cli.id)
       .subscribe(() => {
         this.thfNotification.warning('Cliente Removido com sucesso.');
         this.clientes.splice(this.clientes.indexOf(cli), 1);
@@ -204,7 +204,7 @@ export class ClienteListComponent implements OnInit {
     const selectedClientes = this.tableList.getSelectedRows();
     const clientesWithId = selectedClientes.map(cli => ({ id: cli.id}));
   
-    this.clienteRemoveSub = this.httpClient.request('delete', this.url, { body: clientesWithId } )
+    this.clienteRemoveSub = this.clientesService.request('delete', clientesWithId )
       .subscribe(() => {
         this.thfNotification.warning('Clientes apagados em lote com sucesso.');
         
