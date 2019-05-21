@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { ThfNotificationService } from '@totvs/thf-ui';
+import { Customer } from 'src/app/model/customer.interface';
+import { ClientesService } from '../clientes.service';
 
 @Component({
   selector: 'app-cliente-view',
@@ -14,33 +15,22 @@ import { ThfNotificationService } from '@totvs/thf-ui';
 })
 export class ClienteViewComponent implements OnInit, OnDestroy {
 
-  private readonly url: string = 'https://sample-customers-api.herokuapp.com/api/thf-samples/v1/people';
-
-  private customerSub: Subscription;
-  private paramsSub: Subscription;
-  private customerRemoveSub: Subscription;
-
-  cliente: any = {};
+  cliente: Customer = {};
 
   constructor(
-    private httpClient: HttpClient, 
+    private clientesService: ClientesService, 
     private route: ActivatedRoute, 
     private router: Router,
     private thfNotification: ThfNotificationService) { }
 
   ngOnInit() {
-    this.paramsSub = this.route.params.subscribe(params => this.loadData(params['id']));
+    this.route.params
+    .pipe(take(1))
+    .subscribe(params => this.loadData(params['id']));
   }
 
   ngOnDestroy() {
-    if (this.paramsSub)
-      this.paramsSub.unsubscribe();
     
-    if (this.customerSub)
-      this.customerSub.unsubscribe();
-    
-    if (this.customerRemoveSub)
-      this.customerRemoveSub.unsubscribe();
   }
 
   /** Método do botão Editar */
@@ -50,7 +40,8 @@ export class ClienteViewComponent implements OnInit, OnDestroy {
 
   /** Método do botão Remover */
   remove() {
-    this.customerRemoveSub = this.httpClient.delete(`${this.url}/${this.cliente.id}`)
+    this.clientesService.delete(this.cliente.id)
+      .pipe(take(1))
       .subscribe(() => {
         this.thfNotification.warning('Cadastro do cliente apagado com sucesso.');
 
@@ -65,9 +56,9 @@ export class ClienteViewComponent implements OnInit, OnDestroy {
 
   /** Função que carrega os dados do cliente */
   private loadData(id) {
-    this.customerSub = this.httpClient.get(`${this.url}/${id}`)
+    this.clientesService.getById(id)
     .pipe(
-      map((cli: any) => {
+      map((cli: Customer) => {
         const status = { Active: 'Ativo', Inactive: 'Inativo' };
 
         const genre = { Female: 'Feminino', Male: 'Masculino', Other: 'Outros' };
@@ -76,7 +67,8 @@ export class ClienteViewComponent implements OnInit, OnDestroy {
         cli.genre = genre[cli.genre];
 
         return cli;
-      })
+      }),
+      take(1)
     )
     .subscribe(response => this.cliente = response);
   }

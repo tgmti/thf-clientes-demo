@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { ThfNotificationService, ThfSelectOption } from '@totvs/thf-ui';
 import { Router, ActivatedRoute } from '@angular/router';
+
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { ThfNotificationService, ThfSelectOption } from '@totvs/thf-ui';
+import { ClientesService } from '../clientes.service';
 
 const actionInsert = 'insert';
 const actionUpdate = 'update';
@@ -16,7 +18,6 @@ const actionUpdate = 'update';
 export class ClienteFormComponent implements OnInit {
 
   private action: string = actionInsert;
-  private readonly url: string = 'https://sample-customers-api.herokuapp.com/api/thf-samples/v1/people';
   private clienteSub: Subscription;
   private paramsSub: Subscription;
 
@@ -31,7 +32,7 @@ export class ClienteFormComponent implements OnInit {
   constructor(
     private thfNotification: ThfNotificationService,
     private router: Router,
-    private httpClient: HttpClient,
+    private clientesService: ClientesService,
     private route: ActivatedRoute) {
 
     }
@@ -58,9 +59,9 @@ export class ClienteFormComponent implements OnInit {
     cliente.status = cliente.status ? 'Active' : 'Inactive';
 
     this.clienteSub = this.isUpdateOperation
-      ? this.httpClient.put(`${this.url}/${cliente.id}`, cliente)
+      ? this.clientesService.put(cliente)
         .subscribe(() => this.navigateToList('Cliente atualizado com sucesso'))
-      : this.httpClient.post(this.url, cliente)
+      : this.clientesService.post(cliente)
         .subscribe(() => this.navigateToList('Cliente cadastrado com sucesso'));
 
   }
@@ -78,7 +79,7 @@ export class ClienteFormComponent implements OnInit {
   }
 
   private loadData(id) {
-    this.clienteSub = this.httpClient.get(`${this.url}/${id}`)
+    this.clienteSub = this.clientesService.getById(id)
       .pipe(
         map((cli: any) => {
           cli.status = cli.status === 'Active';

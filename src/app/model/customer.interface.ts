@@ -7,46 +7,46 @@ export interface Customer {
     /**
      * Customer name.
      */
-    name: string;
+    name?: string;
 
     /**
      * Customer email.
      */
-    email: string;
+    email?: string;
 
     /**
      * Customer status.
      */
-    status: string;
+    status?: string;
 
     /**
      * Customer nickname.
      */
-    nickname: string;
+    nickname?: string;
 
     /**
      * Customer birthdate.
      */
-    birthdate: Date;
+    birthdate?: Date;
 
     /**
      * Customer genre.
      */
-    genre: string;
+    genre?: string;
 
     /**
      * Customer street.
      */
-    street: string;
+    street?: string;
 
     /**
      * Customer city.
      */
-    city: string;
+    city?: string;
 
     /**
      * Customer country.
      */
-    country: string;
+    country?: string;
 
   }

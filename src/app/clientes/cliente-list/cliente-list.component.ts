@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup, ThfDisclaimer, ThfPageAction, ThfNotificationService } from '@totvs/thf-ui';
 import { ThfTableAction, ThfTableColumn, ThfTableComponent } from '@totvs/thf-ui/components/thf-table';
 
 import { Router } from '@angular/router';
 import { ClientesService } from '../clientes.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cliente-list',
@@ -15,10 +16,8 @@ import { ClientesService } from '../clientes.service';
 export class ClienteListComponent implements OnInit {
 
   // Objetos para consultar os dados e armazenar os clientes
-  private clienteSub: Subscription;
+  private subscriptions: Array<Subscription> = [];
   public clientes: Array<any> = [];
-  public clienteRemoveSub: Subscription;
-  public clientesRemoveSub: Subscription;
 
   // Controle de loading e paginação
   public hasNext: boolean = false;
@@ -135,19 +134,17 @@ export class ClienteListComponent implements OnInit {
     private clientesService: ClientesService) { }
 
   ngOnInit() {
-    this.loadData();
+    this.subscriptions.push(
+      this.clientesService.loading().subscribe(loading=> this.loading = loading));
+
+    this.subscriptions.push(
+      this.clientesService.hasNext().subscribe(has=> this.hasNext = has));
+
+      this.loadData();
   }
   
   ngOnDestroy() {
-
-    if(this.clienteSub)
-      this.clienteSub.unsubscribe();
-    
-    if (this.clienteRemoveSub)  
-      this.clienteRemoveSub.unsubscribe()
-    
-    if (this.clientesRemoveSub)  
-      this.clientesRemoveSub.unsubscribe()
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
   
   /** @description Carregar mais dados, controlando resultados da busca e paginação */
@@ -186,7 +183,8 @@ export class ClienteListComponent implements OnInit {
 
   /** @description Ação do botão remover */
   private onRemoveCustomer(cli) {
-    this.clienteRemoveSub = this.clientesService.delete(cli.id)
+    this.clientesService.delete(cli.id)
+      .pipe( take(1) ) // unsubscribe automático
       .subscribe(() => {
         this.thfNotification.warning('Cliente Removido com sucesso.');
         this.clientes.splice(this.clientes.indexOf(cli), 1);
@@ -198,7 +196,8 @@ export class ClienteListComponent implements OnInit {
     const selectedClientes = this.tableList.getSelectedRows();
     const clientesWithId = selectedClientes.map(cli => ({ id: cli.id}));
   
-    this.clienteRemoveSub = this.clientesService.request('delete', clientesWithId )
+    this.clientesService.request('delete', clientesWithId )
+      .pipe( take(1) )
       .subscribe(() => {
         this.thfNotification.warning('Clientes apagados em lote com sucesso.');
         
@@ -263,14 +262,18 @@ export class ClienteListComponent implements OnInit {
 
   /** @description Consulta dos dados */
   public loadData(params: { page?: number, search?: string} = {}) {
-    this.loading = true;
-    this.clienteSub = this.clientesService.get(params)
+    // this.loading = true;
+    this.clientesService.setLoading(true)
+    this.clientesService.get(params)
+    .pipe(take(1))
     .subscribe((response: {hasNext: boolean, items: Array<any>}) => {
       this.clientes = !params.page || params.page === 1 
       ? response.items
       : [...this.clientes, ...response.items];
-      this.hasNext = response.hasNext;
-      this.loading = false;
+      // this.hasNext = response.hasNext;
+      this.clientesService.setHasNext(response.hasNext);
+      this.clientesService.setLoading(false);
+      // this.loading = false;
     });
   }
 
