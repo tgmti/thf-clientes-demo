@@ -14,17 +14,16 @@ export class GenericService<T> {
 
   
   private readonly host: string = environment.host; 
-  private readonly port: number = environment.port;
   private readonly apiName: string = environment.apiName;
   private readonly apiVersion: string = environment.apiVersion;
-  private readonly urlApi: string = `${this.host}:${this.port}/${this.apiName}/${this.apiVersion}`; 
+  private readonly urlApi: string = `${this.host}/${this.apiName}/${this.apiVersion}`; 
   
   protected path: string;
 
   constructor(private http: HttpClient) {}
 
-  get(): Observable<TotvsResponse> {
-    return this.http.get<TotvsResponse>(`${this.urlApi}/${this.path}`);
+  get(params?:any): Observable<TotvsResponse> {
+    return this.http.get<TotvsResponse>(`${this.urlApi}/${this.path}`, { params: <any>params });
   }
 
   getById(id: string): Observable<T> {

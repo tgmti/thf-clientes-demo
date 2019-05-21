@@ -7,6 +7,7 @@ import { ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, 
 import { ThfTableAction, ThfTableColumn, ThfTableComponent } from '@totvs/thf-ui/components/thf-table';
 
 import { Router } from '@angular/router';
+import { ClientesService } from '../clientes.service';
 
 @Component({
   selector: 'app-cliente-list',
@@ -136,7 +137,8 @@ export class ClienteListComponent implements OnInit {
   constructor(
     private httpClient: HttpClient,
     private thfNotification: ThfNotificationService, 
-    private router: Router) { }
+    private router: Router,
+    private clientesService: ClientesService) { }
 
   ngOnInit() {
     this.loadData();
@@ -268,7 +270,7 @@ export class ClienteListComponent implements OnInit {
   /** @description Consulta dos dados */
   public loadData(params: { page?: number, search?: string} = {}) {
     this.loading = true;
-    this.clienteSub = this.httpClient.get(this.url, { params: <any>params })
+    this.clienteSub = this.clientesService.get(params)
     .subscribe((response: {hasNext: boolean, items: Array<any>}) => {
       this.clientes = !params.page || params.page === 1 
       ? response.items

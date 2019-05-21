@@ -5,7 +5,6 @@
 export const environment = {
   production: false,
   host: 'https://sample-customers-api.herokuapp.com',
-  port: 80,
   apiName: 'api/thf-samples',
   apiVersion: 'v1'
 };
