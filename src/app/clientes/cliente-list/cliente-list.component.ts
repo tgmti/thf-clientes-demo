@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { HttpClient } from '@angular/common/http';
-
 import { Subscription } from 'rxjs';
 import { ThfPageFilter, ThfModalComponent, ThfComboOption, ThfRadioGroupOption, ThfCheckboxGroupOption, ThfModalAction, ThfDisclaimerGroup, ThfDisclaimer, ThfPageAction, ThfNotificationService } from '@totvs/thf-ui';
 import { ThfTableAction, ThfTableColumn, ThfTableComponent } from '@totvs/thf-ui/components/thf-table';
@@ -16,9 +14,6 @@ import { ClientesService } from '../clientes.service';
 })
 export class ClienteListComponent implements OnInit {
 
-  // Url do servidor de exemplo
-  private readonly url: string = 'https://sample-customers-api.herokuapp.com/api/thf-samples/v1/people';
-  
   // Objetos para consultar os dados e armazenar os clientes
   private clienteSub: Subscription;
   public clientes: Array<any> = [];
@@ -135,7 +130,6 @@ export class ClienteListComponent implements OnInit {
 
   /** @description Construtor da classe */
   constructor(
-    private httpClient: HttpClient,
     private thfNotification: ThfNotificationService, 
     private router: Router,
     private clientesService: ClientesService) { }
