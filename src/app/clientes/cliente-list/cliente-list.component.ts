@@ -19,7 +19,7 @@ export class ClienteListComponent implements OnInit {
   private readonly url: string = 'https://sample-customers-api.herokuapp.com/api/thf-samples/v1/people';
   
   // Objetos para consultar os dados e armazenar os clientes
-  private clienteSub = Subscription;
+  private clienteSub: Subscription;
   public clientes: Array<any> = [];
   public clienteRemoveSub: Subscription;
   public clientesRemoveSub: Subscription;
